@@ -137,7 +137,6 @@ class GEXApp {
     }
 
 
-    // Botões de controle da sidebar removidos - menu agora é horizontal
 
     // Botões de período (timeframe)
     document.querySelectorAll('.tf-btn, .demo-btn').forEach(btn => {
