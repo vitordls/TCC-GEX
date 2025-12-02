@@ -267,5 +267,6 @@ O GEX Dashboard foi desenvolvido para simplificar a gestão do seu negócio, ofe
 
 ---
 
-*Manual criado em: Dezembro 2024*  
+*Manual criado em: Outubro 2025*  
 *Versão do Sistema: 1.0*
+
