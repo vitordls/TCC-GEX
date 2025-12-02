@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Dados de Demonstração</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-container">
+                <div class="header-left">
+                    <div class="logo">
+                        <i class="fas fa-chart-line"></i>
+                        <span>GEX Dashboard</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <nav class="header-menu">
+                        <ul>
+                            <li class="header-menu-item" data-page="dashboard">
+                                <a href="#" class="header-menu-link active">
+                                    <i class="fas fa-tachometer-alt"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page active">
+            <div class="dashboard-container">
+                <div class="dashboard-header">
+                    <h1>Dashboard de Vendas</h1>
+                    <div class="timeframe-selector">
+                        <button class="tf-btn active" data-timeframe="daily">Hoje</button>
+                        <button class="tf-btn" data-timeframe="weekly">Semana</button>
+                        <button class="tf-btn" data-timeframe="monthly">Mês</button>
+                    </div>
+                </div>
+
+                <!-- KPIs -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3 id="totalSales">R$ 0,00</h3>
+                            <p>Vendas Totais</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3 id="totalOrders">0</h3>
+                            <p>Pedidos</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3 id="totalProducts">0</h3>
+                            <p>Produtos</p>
+                        </div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="kpi-content">
+                            <h3 id="growthRate">0%</h3>
+                            <p>Crescimento</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Vendas por Período</h3>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Top Produtos</h3>
+                        <canvas id="topProductsChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Sales Table -->
+                <div class="table-card">
+                    <h3>Relatório de Vendas</h3>
+                    <div class="table-container">
+                        <table id="salesTable">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Hora</th>
+                                    <th>Produto</th>
+                                    <th>Quantidade</th>
+                                    <th>Preço Unit.</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesTableBody">
+                                <tr>
+                                    <td colspan="6" class="no-data">Carregando dados...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Debug Info -->
+                <div class="debug-card">
+                    <h3>Informações de Demonstração</h3>
+                    <div id="debugInfo">
+                        <p>Carregando dados...</p>
+                    </div>
+                    <div id="salesStats" style="margin-top: 20px;">
+                        <h4>Estatísticas de Vendas</h4>
+                        <div id="statsContent">Carregando estatísticas...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="database.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        class TestApp {
+            constructor() {
+                this.dbManager = new DatabaseManager();
+                this.currentUser = null;
+                this.salesChart = null;
+                this.topProductsChart = null;
+            }
+
+            async init() {
+                try {
+                    console.log('🔄 Inicializando teste de dados...');
+                    
+                    // Inicializar banco
+                    await this.dbManager.init();
+                    
+                    // Criar dados de demonstração
+                    await this.dbManager.initializeDefaultData();
+                    
+                    // Fazer login com admin
+                    await this.checkLoggedInUser();
+                    
+                    // Carregar dados do dashboard
+                    await this.loadDashboardData();
+                    
+                    console.log('✅ Teste inicializado com sucesso');
+                } catch (error) {
+                    console.error('❌ Erro no teste:', error);
+                }
+            }
+
+            async checkLoggedInUser() {
+                try {
+                    const adminUser = await this.dbManager.getUserByUsername('admin');
+                    if (adminUser) {
+                        this.currentUser = adminUser;
+                        console.log('✅ Login com admin realizado:', adminUser.username);
+                    } else {
+                        throw new Error('Usuário admin não encontrado');
+                    }
+                } catch (error) {
+                    console.error('❌ Erro ao fazer login:', error);
+                    throw error;
+                }
+            }
+
+            async loadDashboardData() {
+                if (!this.currentUser) {
+                    console.log('❌ Usuário não logado');
+                    return;
+                }
+
+                try {
+                    console.log('📊 Carregando dados do dashboard...');
+                    
+                    const sales = await this.dbManager.getSalesByUser(this.currentUser.id);
+                    const products = await this.dbManager.getProductsByUser(this.currentUser.id);
+                    
+                    console.log('📈 Dados carregados:', {
+                        vendas: sales.length,
+                        produtos: products.length
+                    });
+                    
+                    // Atualizar debug info
+                    this.updateDebugInfo(sales, products);
+                    
+                    // Atualizar KPIs
+                    this.updateKPIs(sales, products);
+                    
+                    // Atualizar tabela
+                    this.updateSalesTable(sales);
+                    
+                    // Atualizar gráficos
+                    this.updateCharts(sales, products);
+                    
+                    console.log('✅ Dashboard atualizado');
+                } catch (error) {
+                    console.error('❌ Erro ao carregar dados:', error);
+                }
+            }
+
+            updateDebugInfo(sales, products) {
+                const debugInfo = document.getElementById('debugInfo');
+                const totalSales = sales.reduce((sum, sale) => sum + sale.amount, 0);
+                const expensiveSales = sales.filter(s => s.price > 5000);
+                const midRangeSales = sales.filter(s => s.price >= 1000 && s.price <= 5000);
+                const budgetSales = sales.filter(s => s.price < 1000);
+                
+                debugInfo.innerHTML = `
+                    <p><strong>Usuário:</strong> ${this.currentUser.username}</p>
+                    <p><strong>Total de Vendas:</strong> ${sales.length}</p>
+                    <p><strong>Total de Produtos:</strong> ${products.length}</p>
+                    <p><strong>Faturamento Total:</strong> R$ ${totalSales.toFixed(2)}</p>
+                    <p><strong>Ticket Médio:</strong> R$ ${(totalSales / sales.length).toFixed(2)}</p>
+                `;
+                
+                const statsContent = document.getElementById('statsContent');
+                statsContent.innerHTML = `
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-top: 10px;">
+                        <div style="background: #f0f0f0; padding: 10px; border-radius: 8px;">
+                            <h5 style="margin: 0; color: #b5179e;">Produtos Caros</h5>
+                            <p style="margin: 5px 0 0 0; font-size: 14px;">${expensiveSales.length} vendas<br>R$ ${expensiveSales.reduce((sum, s) => sum + s.amount, 0).toFixed(2)}</p>
+                        </div>
+                        <div style="background: #f0f0f0; padding: 10px; border-radius: 8px;">
+                            <h5 style="margin: 0; color: #7209b7;">Produtos Médios</h5>
+                            <p style="margin: 5px 0 0 0; font-size: 14px;">${midRangeSales.length} vendas<br>R$ ${midRangeSales.reduce((sum, s) => sum + s.amount, 0).toFixed(2)}</p>
+                        </div>
+                        <div style="background: #f0f0f0; padding: 10px; border-radius: 8px;">
+                            <h5 style="margin: 0; color: #f72585;">Produtos Baratos</h5>
+                            <p style="margin: 5px 0 0 0; font-size: 14px;">${budgetSales.length} vendas<br>R$ ${budgetSales.reduce((sum, s) => sum + s.amount, 0).toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <h5>Top 5 Produtos Mais Vendidos:</h5>
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            ${this.getTopProducts(sales).map(p => `<li>${p.name} - ${p.count} vendas</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            getTopProducts(sales) {
+                const productCounts = {};
+                sales.forEach(sale => {
+                    if (productCounts[sale.productName]) {
+                        productCounts[sale.productName].count++;
+                        productCounts[sale.productName].total += sale.amount;
+                    } else {
+                        productCounts[sale.productName] = {
+                            name: sale.productName,
+                            count: 1,
+                            total: sale.amount
+                        };
+                    }
+                });
+                
+                return Object.values(productCounts)
+                    .sort((a, b) => b.count - a.count)
+                    .slice(0, 5);
+            }
+
+            updateKPIs(sales, products) {
+                const totalSales = sales.reduce((sum, sale) => sum + sale.amount, 0);
+                const totalOrders = sales.length;
+                const totalProducts = products.length;
+                
+                document.getElementById('totalSales').textContent = `R$ ${totalSales.toFixed(2)}`;
+                document.getElementById('totalOrders').textContent = totalOrders;
+                document.getElementById('totalProducts').textContent = totalProducts;
+                document.getElementById('growthRate').textContent = '+12.5%';
+            }
+
+            updateSalesTable(sales) {
+                const tbody = document.getElementById('salesTableBody');
+                
+                if (sales.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="no-data">Nenhuma venda encontrada</td></tr>';
+                    return;
+                }
+                
+                tbody.innerHTML = sales.slice(0, 10).map(sale => `
+                    <tr>
+                        <td>${sale.date}</td>
+                        <td>${sale.time}</td>
+                        <td>${sale.productName}</td>
+                        <td>${sale.quantity}</td>
+                        <td>R$ ${sale.price.toFixed(2)}</td>
+                        <td>R$ ${sale.amount.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+            }
+
+            updateCharts(sales, products) {
+                // Gráfico de vendas
+                this.updateSalesChart(sales);
+                
+                // Gráfico de top produtos
+                this.updateTopProductsChart(products);
+            }
+
+            updateSalesChart(sales) {
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                
+                if (this.salesChart) {
+                    this.salesChart.destroy();
+                }
+                
+                // Agrupar vendas por hora (para demonstração)
+                const hourlyData = {};
+                for (let i = 0; i < 24; i++) {
+                    hourlyData[i] = 0;
+                }
+                
+                sales.forEach(sale => {
+                    const hour = parseInt(sale.time.split(':')[0]);
+                    hourlyData[hour] += sale.amount;
+                });
+                
+                const labels = Object.keys(hourlyData).map(h => `${h}h`);
+                const data = Object.values(hourlyData);
+                
+                this.salesChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Vendas (R$)',
+                            data: data,
+                            borderColor: '#b5179e',
+                            backgroundColor: 'rgba(181, 23, 158, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+
+            updateTopProductsChart(products) {
+                const ctx = document.getElementById('topProductsChart').getContext('2d');
+                
+                if (this.topProductsChart) {
+                    this.topProductsChart.destroy();
+                }
+                
+                const topProducts = products.slice(0, 5);
+                const labels = topProducts.map(p => p.name);
+                const data = topProducts.map(p => p.stock);
+                
+                this.topProductsChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: [
+                                '#b5179e',
+                                '#7209b7',
+                                '#f72585',
+                                '#4cc9f0',
+                                '#4361ee'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false
+                    }
+                });
+            }
+        }
+
+        // Inicializar quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', () => {
+            const app = new TestApp();
+            app.init();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual do Usuário - GEX Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .manual-container {
+            display: flex;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+
+        /* Sidebar Navigation */
+        .manual-sidebar {
+            width: 300px;
+            background: #2c3e50;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .manual-sidebar.collapsed {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            background: #34495e;
+            border-bottom: 1px solid #4a5f7a;
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            color: #bdc3c7;
+            font-size: 0.9rem;
+        }
+
+        .search-box {
+            padding: 15px 20px;
+            background: #34495e;
+            border-bottom: 1px solid #4a5f7a;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 25px;
+            background: #ecf0f1;
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            background: white;
+            box-shadow: 0 0 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+        }
+
+        .nav-item {
+            border-bottom: 1px solid #4a5f7a;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 15px 20px;
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            background: #34495e;
+            color: #3498db;
+            padding-left: 30px;
+        }
+
+        .nav-link.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sub-nav {
+            list-style: none;
+            background: #34495e;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .sub-nav.active {
+            max-height: 500px;
+        }
+
+        .sub-nav .nav-link {
+            padding-left: 50px;
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .sub-nav .nav-link:hover {
+            color: #3498db;
+            background: #2c3e50;
+        }
+
+        /* Main Content */
+        .manual-content {
+            flex: 1;
+            margin-left: 300px;
+            padding: 0;
+            transition: margin-left 0.3s ease;
+        }
+
+        .manual-content.expanded {
+            margin-left: 0;
+        }
+
+        .content-header {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .content-header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .content-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .toggle-sidebar {
+            display: none;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .content-body {
+            padding: 30px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: white;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .section-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px 30px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: linear-gradient(135deg, #2980b9, #1f4e79);
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-header i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .section-header .toggle-icon {
+            float: right;
+            transition: transform 0.3s ease;
+        }
+
+        .section-header.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            padding: 30px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .section-content.collapsed {
+            display: none;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+
+        .feature-card i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+
+        .step-list {
+            counter-reset: step-counter;
+            list-style: none;
+            padding: 0;
+        }
+
+        .step-list li {
+            counter-increment: step-counter;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            position: relative;
+            padding-left: 60px;
+            transition: all 0.3s ease;
+        }
+
+        .step-list li:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .step-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            background: #3498db;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+            margin: 15px 0;
+        }
+
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #17a2b8;
+            margin: 15px 0;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            margin: 15px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .back-to-dashboard {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-dashboard:hover {
+            background: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(231, 76, 60, 0.4);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .manual-sidebar {
+                transform: translateX(-100%);
+            }
+
+            .manual-sidebar.active {
+                transform: translateX(0);
+            }
+
+            .manual-content {
+                margin-left: 0;
+            }
+
+            .toggle-sidebar {
+                display: inline-block;
+            }
+
+            .content-body {
+                padding: 20px 15px;
+            }
+
+            .section-header {
+                padding: 15px 20px;
+            }
+
+            .section-content {
+                padding: 20px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .section:nth-child(2) { animation-delay: 0.1s; }
+        .section:nth-child(3) { animation-delay: 0.2s; }
+        .section:nth-child(4) { animation-delay: 0.3s; }
+        .section:nth-child(5) { animation-delay: 0.4s; }
+        .section:nth-child(6) { animation-delay: 0.5s; }
+        .section:nth-child(7) { animation-delay: 0.6s; }
+        .section:nth-child(8) { animation-delay: 0.7s; }
+        .section:nth-child(9) { animation-delay: 0.8s; }
+        .section:nth-child(10) { animation-delay: 0.9s; }
+    </style>
+</head>
+<body>
+    <div class="manual-container">
+        <!-- Sidebar Navigation -->
+        <nav class="manual-sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h1><i class="fas fa-book"></i> Manual GEX</h1>
+                <p>Guia completo do usuário</p>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="Buscar no manual...">
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#introducao" class="nav-link active">
+                        <i class="fas fa-home"></i> Introdução
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#primeiros-passos" class="nav-link">
+                        <i class="fas fa-rocket"></i> Primeiros Passos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#navegacao" class="nav-link">
+                        <i class="fas fa-compass"></i> Navegação
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#dashboard" class="nav-link">
+                        <i class="fas fa-chart-line"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#produtos" class="nav-link">
+                        <i class="fas fa-box"></i> Gestão de Produtos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#vendas" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i> Gestão de Vendas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#custos" class="nav-link">
+                        <i class="fas fa-dollar-sign"></i> Gestão de Custos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#relatorios" class="nav-link">
+                        <i class="fas fa-chart-bar"></i> Relatórios
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#dicas" class="nav-link">
+                        <i class="fas fa-lightbulb"></i> Dicas Importantes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#suporte" class="nav-link">
+                        <i class="fas fa-life-ring"></i> Suporte
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="manual-content" id="mainContent">
+            <div class="content-header">
+                <button class="toggle-sidebar" id="toggleSidebar">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+                <h1>Manual do Usuário - GEX Dashboard</h1>
+                <p>Guia completo para utilizar todas as funcionalidades do sistema</p>
+            </div>
+
+            <div class="content-body">
+                <!-- Introdução -->
+                <section id="introducao" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-home"></i> Introdução</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <p>Bem-vindo ao <span class="highlight">GEX Dashboard</span>, um sistema completo de gestão empresarial que permite controlar produtos, vendas, custos e acompanhar o desempenho do seu negócio através de relatórios e gráficos interativos.</p>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h3><i class="fas fa-chart-line"></i> Dashboard Inteligente</h3>
+                                <p>KPIs em tempo real, gráficos interativos e relatórios detalhados para acompanhar o desempenho do seu negócio.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-box"></i> Gestão de Produtos</h3>
+                                <p>Controle completo de estoque, preços, margens e categorias de produtos com cálculos automáticos.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-shopping-cart"></i> Controle de Vendas</h3>
+                                <p>Registro de vendas, controle de estoque automático e relatórios de performance por produto.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-dollar-sign"></i> Gestão de Custos</h3>
+                                <p>Controle de custos automáticos e personalizados para análise precisa de lucratividade.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Primeiros Passos -->
+                <section id="primeiros-passos" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-rocket"></i> Primeiros Passos</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>1. Acesso ao Sistema</h3>
+                        <ol class="step-list">
+                            <li>Abra o arquivo <code>index.html</code> no seu navegador</li>
+                            <li>Na página inicial, clique em <strong>"Acessar Dashboard"</strong></li>
+                            <li>Faça login com suas credenciais ou use os dados de demonstração</li>
+                        </ol>
+
+                        <div class="info">
+                            <strong>💡 Dica:</strong> Use os dados de demonstração para explorar o sistema:
+                            <br><strong>Usuário:</strong> admin | <strong>Senha:</strong> 123456
+                        </div>
+
+                        <h3>2. Navegação Inicial</h3>
+                        <p>Após o login, você terá acesso ao menu principal com todas as funcionalidades:</p>
+                        <ul>
+                            <li><strong>Dashboard:</strong> Visão geral e relatórios</li>
+                            <li><strong>Produtos:</strong> Gestão de produtos e estoque</li>
+                            <li><strong>Vendas:</strong> Registro e controle de vendas</li>
+                            <li><strong>Custos:</strong> Controle de gastos e despesas</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Navegação -->
+                <section id="navegacao" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-compass"></i> Navegação</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Menu Principal</h3>
+                        <p>O sistema possui um menu horizontal no topo com as seguintes seções:</p>
+                        
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h3><i class="fas fa-home"></i> Início</h3>
+                                <p>Página inicial com visão geral do sistema e demonstração interativa.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-chart-line"></i> Dashboard</h3>
+                                <p>Centro de controle com KPIs, gráficos e relatórios em tempo real.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-box"></i> Produtos</h3>
+                                <p>Gestão completa de produtos, estoque e categorias.</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-shopping-cart"></i> Vendas</h3>
+                                <p>Registro, edição e controle de todas as vendas realizadas.</p>
+                            </div>
+                        </div>
+
+                        <div class="success">
+                            <strong>✅ Dica:</strong> Use o menu para navegar rapidamente entre as diferentes seções do sistema. Cada seção possui funcionalidades específicas e independentes.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Dashboard -->
+                <section id="dashboard" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-line"></i> Dashboard</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Visão Geral</h3>
+                        <p>O Dashboard é o centro de controle do sistema, mostrando informações essenciais do seu negócio em tempo real.</p>
+
+                        <h3>Controles de Período</h3>
+                        <p>Use os botões no topo para filtrar dados por:</p>
+                        <ul>
+                            <li><strong>Diário:</strong> Dados do dia atual</li>
+                            <li><strong>Semanal:</strong> Dados da semana atual</li>
+                            <li><strong>Mensal:</strong> Dados do mês atual</li>
+                            <li><strong>Anual:</strong> Dados do ano atual</li>
+                        </ul>
+
+                        <h3>KPIs Principais</h3>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h3><i class="fas fa-dollar-sign"></i> Receita Total</h3>
+                                <p>Valor total das vendas no período selecionado</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-chart-line"></i> Lucro Total</h3>
+                                <p>Receita menos custos, mostrando a lucratividade real</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-shopping-bag"></i> Total de Pedidos</h3>
+                                <p>Quantidade de vendas realizadas no período</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-calculator"></i> Ticket Médio</h3>
+                                <p>Valor médio por venda (Receita ÷ Pedidos)</p>
+                            </div>
+                        </div>
+
+                        <h3>Gráficos Interativos</h3>
+                        <ul>
+                            <li><strong>Gráfico de Vendas:</strong> Evolução das vendas ao longo do tempo</li>
+                            <li><strong>Top Produtos:</strong> Produtos mais vendidos com percentual de participação</li>
+                            <li><strong>Tabela de Vendas Recentes:</strong> Lista das últimas vendas realizadas</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Produtos -->
+                <section id="produtos" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-box"></i> Gestão de Produtos</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Cards de Resumo</h3>
+                        <p>A página de produtos exibe cards informativos com:</p>
+                        <ul>
+                            <li><strong>Total de Produtos:</strong> Quantidade de produtos cadastrados</li>
+                            <li><strong>Valor Total do Estoque:</strong> Valor total em estoque (preço × quantidade)</li>
+                            <li><strong>Margem Média:</strong> Margem percentual média de todos os produtos</li>
+                            <li><strong>Lucro Total:</strong> Lucro potencial total do estoque</li>
+                        </ul>
+
+                        <h3>Adicionar Novo Produto</h3>
+                        <ol class="step-list">
+                            <li>Clique em <strong>"Novo Produto"</strong> (botão azul)</li>
+                            <li>Preencha os campos obrigatórios:
+                                <ul>
+                                    <li><strong>Nome do Produto:</strong> Nome identificador do produto</li>
+                                    <li><strong>Custo:</strong> Valor de compra do produto</li>
+                                    <li><strong>Preço de Venda:</strong> Valor de venda do produto</li>
+                                    <li><strong>Quantidade em Estoque:</strong> Quantidade disponível</li>
+                                </ul>
+                            </li>
+                            <li>Selecione a <strong>Categoria</strong> apropriada</li>
+                            <li>Adicione uma <strong>Descrição</strong> (opcional)</li>
+                            <li>Clique em <strong>"Adicionar Produto"</strong></li>
+                        </ol>
+
+                        <div class="warning">
+                            <strong>⚠️ Atenção:</strong> Ao excluir um produto, todas as vendas associadas a ele também serão removidas automaticamente (exclusão em cascata).
+                        </div>
+
+                        <h3>Editar Produto</h3>
+                        <ol class="step-list">
+                            <li>Na lista de produtos, clique no botão <strong>"Editar"</strong> (ícone de lápis)</li>
+                            <li>Modifique os dados desejados no modal</li>
+                            <li>Clique em <strong>"Atualizar Produto"</strong></li>
+                        </ol>
+
+                        <h3>Visualização</h3>
+                        <p>Você pode alternar entre duas visualizações:</p>
+                        <ul>
+                            <li><strong>Lista:</strong> Visualização em tabela com todos os detalhes</li>
+                            <li><strong>Grid:</strong> Visualização em cards para uma visão mais visual</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Vendas -->
+                <section id="vendas" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-shopping-cart"></i> Gestão de Vendas</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Cards de Resumo</h3>
+                        <p>A página de vendas exibe cards informativos com:</p>
+                        <ul>
+                            <li><strong>Receita Total:</strong> Valor total das vendas</li>
+                            <li><strong>Lucro Total:</strong> Receita menos custos</li>
+                            <li><strong>Margem Média:</strong> Margem percentual média</li>
+                            <li><strong>Total de Pedidos:</strong> Quantidade de vendas</li>
+                        </ul>
+
+                        <h3>Registrar Nova Venda</h3>
+                        <ol class="step-list">
+                            <li>Clique em <strong>"Nova Venda"</strong> (botão azul)</li>
+                            <li>Selecione o <strong>Produto</strong> da lista</li>
+                            <li>Informe a <strong>Quantidade</strong> vendida</li>
+                            <li>Confirme a <strong>Data</strong> e <strong>Horário</strong></li>
+                            <li>Adicione <strong>Observações</strong> (opcional)</li>
+                            <li>Clique em <strong>"Registrar Venda"</strong></li>
+                        </ol>
+
+                        <div class="success">
+                            <strong>✅ Benefício:</strong> Ao registrar uma venda, o estoque do produto é automaticamente reduzido. Ao excluir uma venda, o estoque é restaurado.
+                        </div>
+
+                        <h3>Editar Venda</h3>
+                        <ol class="step-list">
+                            <li>Na lista de vendas, clique no botão <strong>"Editar"</strong> (ícone de lápis)</li>
+                            <li>Modifique os dados desejados</li>
+                            <li>Clique em <strong>"Atualizar Venda"</strong></li>
+                        </ol>
+
+                        <h3>Excluir Venda</h3>
+                        <ol class="step-list">
+                            <li>Clique no botão <strong>"Excluir"</strong> (ícone de lixeira)</li>
+                            <li>Confirme a exclusão no modal</li>
+                            <li>O estoque do produto será restaurado automaticamente</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Custos -->
+                <section id="custos" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-dollar-sign"></i> Gestão de Custos</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Tipos de Custos</h3>
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <h3><i class="fas fa-calculator"></i> Custos Automáticos</h3>
+                                <p>Calculados automaticamente com base no custo dos produtos vendidos</p>
+                            </div>
+                            <div class="feature-card">
+                                <h3><i class="fas fa-edit"></i> Custos Personalizados</h3>
+                                <p>Adicionados manualmente para despesas como aluguel, salários, marketing</p>
+                            </div>
+                        </div>
+
+                        <h3>Adicionar Custo Personalizado</h3>
+                        <ol class="step-list">
+                            <li>Clique em <strong>"Adicionar Custo"</strong> (botão azul)</li>
+                            <li>Preencha os campos:
+                                <ul>
+                                    <li><strong>Descrição:</strong> Descrição do custo (obrigatório)</li>
+                                    <li><strong>Valor:</strong> Valor do custo (obrigatório)</li>
+                                    <li><strong>Categoria:</strong> Aluguel, Salários, Marketing, Outros</li>
+                                    <li><strong>Data:</strong> Data do custo (padrão: hoje)</li>
+                                </ul>
+                            </li>
+                            <li>Clique em <strong>"Adicionar Custo"</strong></li>
+                        </ol>
+
+                        <h3>Editar Custo</h3>
+                        <ol class="step-list">
+                            <li>Na lista de custos, clique no botão <strong>"Editar"</strong> (ícone de lápis)</li>
+                            <li>Modifique os dados desejados</li>
+                            <li>Clique em <strong>"Atualizar Custo"</strong></li>
+                        </ol>
+                    </div>
+                </section>
+
+                <!-- Relatórios -->
+                <section id="relatorios" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-chart-bar"></i> Relatórios e Gráficos</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Gráfico de Vendas</h3>
+                        <p>Mostra a evolução das vendas por período selecionado. Interativo - clique nos elementos para mais detalhes.</p>
+
+                        <h3>Gráfico de Top Produtos</h3>
+                        <p>Exibe os produtos mais vendidos com percentual de participação. Atualiza em tempo real conforme novas vendas são registradas.</p>
+
+                        <h3>Tabela de Vendas Recentes</h3>
+                        <p>Lista as vendas mais recentes com dados detalhados de cada transação. Atualiza automaticamente.</p>
+
+                        <h3>Filtros e Períodos</h3>
+                        <p>Use os controles de período para visualizar dados específicos:</p>
+                        <ul>
+                            <li><strong>Diário:</strong> Dados do dia atual</li>
+                            <li><strong>Semanal:</strong> Dados da semana atual</li>
+                            <li><strong>Mensal:</strong> Dados do mês atual</li>
+                            <li><strong>Anual:</strong> Dados do ano atual</li>
+                        </ul>
+
+                        <div class="info">
+                            <strong>💡 Dica:</strong> Os gráficos são interativos e se atualizam automaticamente quando você adiciona, edita ou exclui dados no sistema.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Dicas Importantes -->
+                <section id="dicas" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-lightbulb"></i> Dicas Importantes</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Segurança dos Dados</h3>
+                        <ul>
+                            <li>Sempre faça backup dos seus dados</li>
+                            <li>Use senhas seguras</li>
+                            <li>Não compartilhe suas credenciais</li>
+                        </ul>
+
+                        <h3>Boas Práticas</h3>
+                        <ul>
+                            <li>Registre vendas imediatamente após a realização</li>
+                            <li>Mantenha o estoque sempre atualizado</li>
+                            <li>Revise regularmente os relatórios</li>
+                            <li>Monitore a margem de lucro dos produtos</li>
+                        </ul>
+
+                        <h3>Resolução de Problemas</h3>
+                        <ul>
+                            <li>Se algo não funcionar, recarregue a página</li>
+                            <li>Verifique se todos os campos obrigatórios estão preenchidos</li>
+                            <li>Use o console do navegador (F12) para ver mensagens de erro</li>
+                        </ul>
+
+                        <div class="warning">
+                            <strong>⚠️ Importante:</strong> O sistema possui exclusão em cascata. Ao excluir um produto, todas as vendas associadas também serão removidas.
+                        </div>
+
+                        <div class="success">
+                            <strong>✅ Benefício:</strong> Todos os cálculos são feitos automaticamente: lucro, margem, estoque e relatórios.
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Suporte -->
+                <section id="suporte" class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-life-ring"></i> Suporte</h2>
+                        <i class="fas fa-chevron-down toggle-icon"></i>
+                    </div>
+                    <div class="section-content">
+                        <h3>Funções de Debug</h3>
+                        <p>Se você tiver problemas técnicos, pode usar estas funções no console do navegador (F12):</p>
+                        
+                        <div class="code-block">
+// Ver estado geral do banco de dados
+debugDatabase()
+
+// Ver vendas de um produto específico
+debugSalesByProduct('ID_DO_PRODUTO')
+
+// Limpar vendas órfãs (vendas sem produto)
+cleanupOrphanedSales()
+                        </div>
+
+                        <h3>Contato</h3>
+                        <p>Para suporte técnico ou dúvidas sobre o sistema, entre em contato com a equipe de desenvolvimento.</p>
+
+                        <h3>Versão do Sistema</h3>
+                        <p><strong>GEX Dashboard v1.0</strong> - Dezembro 2024</p>
+
+                        <div class="info">
+                            <strong>📞 Suporte:</strong> Este manual foi criado para ajudá-lo a utilizar todas as funcionalidades do sistema de forma eficiente e intuitiva.
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Botão de Volta ao Dashboard -->
+    <a href="index.html" class="back-to-dashboard">
+        <i class="fas fa-arrow-left"></i> Voltar ao Dashboard
+    </a>
+
+    <script>
+        // Toggle Sidebar
+        const toggleSidebar = document.getElementById('toggleSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+
+        toggleSidebar.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            mainContent.classList.toggle('expanded');
+        });
+
+        // Search Functionality
+        const searchInput = document.getElementById('searchInput');
+        const sections = document.querySelectorAll('.section');
+
+        searchInput.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = searchTerm ? 'none' : 'block';
+                }
+            });
+        });
+
+        // Smooth Scrolling for Navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links
+                navLinks.forEach(l => l.classList.remove('active'));
+                // Add active class to clicked link
+                link.classList.add('active');
+                
+                const targetId = link.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                
+                if (targetSection) {
+                    targetSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Collapsible Sections
+        const sectionHeaders = document.querySelectorAll('.section-header');
+        
+        sectionHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                const section = header.parentElement;
+                const content = section.querySelector('.section-content');
+                const icon = header.querySelector('.toggle-icon');
+                
+                content.classList.toggle('collapsed');
+                header.classList.toggle('collapsed');
+                icon.classList.toggle('fa-chevron-down');
+                icon.classList.toggle('fa-chevron-up');
+            });
+        });
+
+        // Highlight search terms
+        function highlightSearchTerms() {
+            const searchTerm = searchInput.value;
+            if (searchTerm.length < 2) return;
+            
+            const walker = document.createTreeWalker(
+                document.querySelector('.content-body'),
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            const textNodes = [];
+            let node;
+            while (node = walker.nextNode()) {
+                textNodes.push(node);
+            }
+            
+            textNodes.forEach(textNode => {
+                const parent = textNode.parentElement;
+                if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') return;
+                
+                const text = textNode.textContent;
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                const highlightedText = text.replace(regex, '<mark>$1</mark>');
+                
+                if (highlightedText !== text) {
+                    const wrapper = document.createElement('div');
+                    wrapper.innerHTML = highlightedText;
+                    parent.replaceChild(wrapper, textNode);
+                }
+            });
+        }
+
+        // Auto-expand section on search
+        searchInput.addEventListener('input', () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                if (content.includes(searchTerm) && searchTerm.length > 2) {
+                    const header = section.querySelector('.section-header');
+                    const contentDiv = section.querySelector('.section-content');
+                    const icon = header.querySelector('.toggle-icon');
+                    
+                    contentDiv.classList.remove('collapsed');
+                    header.classList.remove('collapsed');
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set first section as active by default
+            const firstSection = document.querySelector('.section');
+            if (firstSection) {
+                const header = firstSection.querySelector('.section-header');
+                const content = firstSection.querySelector('.section-content');
+                const icon = header.querySelector('.toggle-icon');
+                
+                content.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            }
+        });
+    </script>
+</body>
+</html>

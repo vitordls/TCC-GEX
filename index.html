@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GEX</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <!-- Sidebar removido - Menu agora está no header -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="header-left">
+        <div class="header-logo">
+          <div class="logo-frame">
+            <img src="logo.jpg" alt="Logo GEX" class="logo-image">
+          </div>
+          <h1>GEX</h1>
+        </div>
+      </div>
+      
+      <!-- Menu Horizontal -->
+      <nav class="header-menu">
+        <ul class="header-menu-list">
+          <li class="header-menu-item" data-page="home">
+            <a href="#" class="header-menu-link" data-tooltip="Página Inicial">
+              <i class="fas fa-home"></i>
+              <span>Início</span>
+            </a>
+          </li>
+          <li class="header-menu-item" data-page="dashboard">
+            <a href="#" class="header-menu-link" data-tooltip="Dashboard">
+              <i class="fas fa-chart-line"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="header-menu-item" data-page="products">
+            <a href="#" class="header-menu-link" data-tooltip="Produtos">
+              <i class="fas fa-box"></i>
+              <span>Produtos</span>
+            </a>
+          </li>
+          <li class="header-menu-item" data-page="sales">
+            <a href="#" class="header-menu-link" data-tooltip="Vendas">
+              <i class="fas fa-shopping-cart"></i>
+              <span>Vendas</span>
+            </a>
+          </li>
+          <li class="header-menu-item" data-page="costs">
+            <a href="#" class="header-menu-link" data-tooltip="Custos">
+              <i class="fas fa-dollar-sign"></i>
+              <span>Custos</span>
+            </a>
+          </li>
+          <li class="header-menu-item" data-page="about">
+            <a href="#" class="header-menu-link" data-tooltip="Sobre">
+              <i class="fas fa-info-circle"></i>
+              <span>Sobre</span>
+            </a>
+          </li>
+          <li class="header-menu-item" data-page="account" id="accountMenuItem" style="display: none;">
+            <a href="#" class="header-menu-link" data-tooltip="Minha Conta">
+              <i class="fas fa-user-cog"></i>
+              <span>Conta</span>
+            </a>
+          </li>
+          <li class="header-menu-item" id="loginMenuItem">
+            <a href="#" class="header-menu-link" id="headerLoginBtn" data-tooltip="Login">
+              <i class="fas fa-sign-in-alt"></i>
+              <span>Login</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="header-right">
+        <div class="user-profile" id="userProfile" style="display: none;">
+          <div class="profile-picture" id="profilePicture" onclick="showPage('account')" title="Minha Conta">
+            <img id="profileImage" src="" alt="Foto do usuário" class="profile-img">
+            <div class="profile-placeholder" id="profilePlaceholder">
+              <i class="fas fa-user"></i>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-secondary logout-btn" id="logoutBtn" style="display: none;">
+          <i class="fas fa-sign-out-alt"></i> Sair
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <!-- Página Inicial -->
+    <div class="page active" id="home-page">
+      <div class="container">
+        <div class="hero-section">
+          <div class="hero-content">
+            
+
+            
+          </div>
+        </div>
+        <h1 class="hero-title">GEX</h1>
+        <p class="hero-subtitle">Gestão inteligente, tempo eficiente</p>
+        <div class="hero-buttons">
+          <button class="btn btn-primary btn-large" id="loginBtn">
+            <i class="fas fa-sign-in-alt"></i> Acessar Dashboard
+          </button>
+          <button class="btn btn-secondary btn-large" id="manualBtn">
+            <i class="fas fa-book"></i> Manual do Usuário
+          </button>
+        </div>
+        
+        <!-- Demonstração Interativa do Dashboard -->
+        <div class="demo-section">
+          <div class="monitor-container">
+            <div class="monitor-frame">
+              <div class="monitor-screen">
+                <div class="demo-dashboard">
+                  <div class="demo-container">
+                    <!-- Controles de Período -->
+                    <div class="timeframe" id="demoTimeframeControls">
+                      <button class="tf-btn active" data-range="daily">Diário</button>
+                      <button class="tf-btn" data-range="weekly">Semanal</button>
+                      <button class="tf-btn" data-range="monthly">Mensal</button>
+                      <button class="tf-btn" data-range="yearly">Anual</button>
+                    </div>
+                    
+                    <!-- KPIs -->
+                    <section class="kpis">
+                      <div class="kpi">
+                        <div class="kpi-label">Receita</div>
+                        <div class="kpi-value">R$ 127.450,80</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Lucro</div>
+                        <div class="kpi-value">R$ 38.235,24</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Pedidos</div>
+                        <div class="kpi-value">342</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Ticket Médio</div>
+                        <div class="kpi-value">R$ 372,52</div>
+                      </div>
+                      <div class="kpi">
+                        <div class="kpi-label">Itens Vendidos</div>
+                        <div class="kpi-value">1.156</div>
+                      </div>
+                    </section>
+
+                    <!-- Gráfico de Vendas -->
+                    <section class="charts">
+                      <div class="card">
+                        <div class="card-header">
+                          <h2>Vendas no período</h2>
+                        </div>
+                        <div class="chart-container">
+                          <canvas id="demoSalesChart"></canvas>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- Top Produtos -->
+                    <section class="top-products-section">
+                      <div class="card top-products-card">
+                        <div class="card-header">
+                          <div class="header-content">
+                            <div class="header-icon">
+                              <i class="fas fa-trophy"></i>
+                            </div>
+                            <div class="header-text">
+                              <h2>Top Produtos</h2>
+                              <p class="card-subtitle">Produtos com maior receita</p>
+                            </div>
+                          </div>
+                          <div class="header-actions">
+                            <button class="btn-icon" title="Ver detalhes">
+                              <i class="fas fa-info-circle"></i>
+                            </button>
+                          </div>
+                        </div>
+                        <div class="chart-wrapper">
+                          <canvas id="demoTopProductsChart"></canvas>
+                        </div>
+                        <div class="card-footer">
+                          <div class="footer-stats">
+                            <div class="stat-item">
+                              <span class="stat-label">Total de Produtos</span>
+                              <span class="stat-value">32</span>
+                            </div>
+                            <div class="stat-item">
+                              <span class="stat-label">Receita Total</span>
+                              <span class="stat-value">R$ 127.450,80</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </section>
+
+                    <!-- Relatório de Vendas -->
+                    <section class="table-section card">
+                      <div class="card-header">
+                        <h2>Relatório de Vendas</h2>
+                      </div>
+                      <div class="table-wrap">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Período</th>
+                              <th>Receita</th>
+                              <th>Custos</th>
+                              <th>Lucro</th>
+                              <th>Margem %</th>
+                              <th>Pedidos</th>
+                              <th>Ticket Médio</th>
+                              <th>Itens</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td>Hoje</td>
+                              <td>R$ 3.450,80</td>
+                              <td>R$ 2.415,56</td>
+                              <td>R$ 1.035,24</td>
+                              <td>30%</td>
+                              <td>12</td>
+                              <td>R$ 287,57</td>
+                              <td>18</td>
+                            </tr>
+                            <tr>
+                              <td>Ontem</td>
+                              <td>R$ 4.250,90</td>
+                              <td>R$ 2.975,63</td>
+                              <td>R$ 1.275,27</td>
+                              <td>30%</td>
+                              <td>15</td>
+                              <td>R$ 283,39</td>
+                              <td>22</td>
+                            </tr>
+                            <tr>
+                              <td>Esta Semana</td>
+                              <td>R$ 18.750,40</td>
+                              <td>R$ 13.125,28</td>
+                              <td>R$ 5.625,12</td>
+                              <td>30%</td>
+                              <td>89</td>
+                              <td>R$ 210,68</td>
+                              <td>156</td>
+                            </tr>
+                            <tr>
+                              <td>Semana Passada</td>
+                              <td>R$ 22.340,60</td>
+                              <td>R$ 15.638,42</td>
+                              <td>R$ 6.702,18</td>
+                              <td>30%</td>
+                              <td>98</td>
+                              <td>R$ 228,07</td>
+                              <td>187</td>
+                            </tr>
+                            <tr>
+                              <td>Este Mês</td>
+                              <td>R$ 78.600,10</td>
+                              <td>R$ 55.020,07</td>
+                              <td>R$ 23.580,03</td>
+                              <td>30%</td>
+                              <td>342</td>
+                              <td>R$ 229,82</td>
+                              <td>1.156</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Controles do Monitor -->
+              <div class="monitor-controls">
+                <div class="monitor-button"></div>
+                <div class="monitor-button"></div>
+                <div class="monitor-button"></div>
+              </div>
+              
+              <!-- Base do Monitor -->
+              <div class="monitor-base"></div>
+            </div>
+          </div>
+        </div>
+        
+
+        <div class="features-section">
+          <h2>Funcionalidades Principais</h2>
+          <div class="features-grid">
+            <div class="feature-card" data-feature="dashboard">
+              <div class="feature-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <h3>Dashboard Completo</h3>
+              <p>KPIs em tempo real, gráficos interativos por período e relatórios de vendas com lucro e margem.</p>
+            </div>
+            <div class="feature-card" data-feature="products">
+              <div class="feature-icon">
+                <i class="fas fa-box"></i>
+              </div>
+              <h3>Gestão de Produtos</h3>
+              <p>Cadastro completo com custo, preço de venda, estoque e controle de lucro com notificações.</p>
+            </div>
+            <div class="feature-card" data-feature="sales">
+              <div class="feature-icon">
+                <i class="fas fa-shopping-cart"></i>
+              </div>
+              <h3>Vendas Multi-produto</h3>
+              <p>Registro de vendas com múltiplos produtos, cálculo automático de lucro e margem.</p>
+            </div>
+            <div class="feature-card" data-feature="costs">
+              <div class="feature-icon">
+                <i class="fas fa-dollar-sign"></i>
+              </div>
+              <h3>Controle de Custos</h3>
+              <p>Gestão de gastos operacionais, impostos em porcentagem e resumo financeiro completo.</p>
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </div>
+
+    <!-- Página Dashboard -->
+    <div class="page" id="dashboard-page">
+      <div class="container">
+        <div class="timeframe" id="timeframeControls">
+          <button class="tf-btn active" data-range="daily">Diário</button>
+          <button class="tf-btn" data-range="weekly">Semanal</button>
+          <button class="tf-btn" data-range="monthly">Mensal</button>
+          <button class="tf-btn" data-range="yearly">Anual</button>
+        </div>
+        <section class="kpis">
+          <div class="kpi">
+            <div class="kpi-label">Receita</div>
+            <div class="kpi-value" id="kpiRevenue">R$ 0,00</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Lucro</div>
+            <div class="kpi-value" id="kpiProfit">R$ 0,00</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Pedidos</div>
+            <div class="kpi-value" id="kpiOrders">0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Ticket Médio</div>
+            <div class="kpi-value" id="kpiAvgTicket">R$ 0,00</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Itens Vendidos</div>
+            <div class="kpi-value" id="kpiItems">0</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Custo Total</div>
+            <div class="kpi-value" id="kpiCost">R$ 0,00</div>
+          </div>
+          <div class="kpi">
+            <div class="kpi-label">Margem Média</div>
+            <div class="kpi-value" id="kpiMargin">0%</div>
+          </div>
+        </section>
+
+        <section class="charts">
+          <div class="card">
+            <div class="card-header">
+              <h2>Vendas no período</h2>
+            </div>
+            <div class="chart-container">
+              <canvas id="salesOverview"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <section class="top-products-section">
+          <div class="card top-products-card">
+            <div class="card-header">
+              <div class="header-content">
+                <div class="header-icon">
+                  <i class="fas fa-trophy"></i>
+                </div>
+                <div class="header-text">
+                  <h2>Top Produtos</h2>
+                  <p class="card-subtitle">Produtos com maior receita</p>
+                </div>
+              </div>
+              <div class="header-actions">
+                <button class="btn-icon" title="Ver detalhes">
+                  <i class="fas fa-info-circle"></i>
+                </button>
+              </div>
+            </div>
+            <div class="chart-wrapper">
+              <div id="topProducts"></div>
+            </div>
+            <div class="card-footer">
+              <div class="footer-stats">
+                <div class="stat-item">
+                  <span class="stat-label">Total de Produtos</span>
+                  <span class="stat-value" id="totalProductsCount">0</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-label">Receita Total</span>
+                  <span class="stat-value" id="totalRevenue">R$ 0,00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="table-section card">
+          <div class="card-header">
+            <h2>Relatório de Vendas</h2>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Período</th>
+                  <th>Receita</th>
+                  <th>Custos</th>
+                  <th>Lucro</th>
+                  <th>Margem %</th>
+                  <th>Pedidos</th>
+                  <th>Ticket Médio</th>
+                  <th>Itens</th>
+                </tr>
+              </thead>
+              <tbody id="dashboardSalesTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- Página de Produtos -->
+    <div class="page" id="products-page">
+      <div class="container">
+        <div class="page-content">
+          <div class="page-header">
+            <h2>Cadastro de Produtos</h2>
+            <button class="btn btn-primary" id="addProductBtn">
+              <i class="fas fa-plus"></i> Novo Produto
+            </button>
+          </div>
+          
+          <div class="content-wrapper">
+            <!-- Resumo de Produtos -->
+            <div class="products-summary">
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-box"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Total de Produtos</h3>
+                  <div class="summary-value" id="productsTotalCount">0</div>
+                  <div class="summary-subtitle">Produtos cadastrados</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Valor Total do Estoque</h3>
+                  <div class="summary-value" id="productsTotalValue">R$ 0,00</div>
+                  <div class="summary-subtitle">Valor total em estoque</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-percentage"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Margem Média</h3>
+                  <div class="summary-value" id="productsAvgMargin">0%</div>
+                  <div class="summary-subtitle">Margem percentual média</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Lucro Total</h3>
+                  <div class="summary-value" id="productsTotalProfit">R$ 0,00</div>
+                  <div class="summary-subtitle">Lucro potencial total</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Lista de Produtos</h3>
+              </div>
+              <br>
+              <div class="table-wrap">
+                <table id="productsTable">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Custo</th>
+                      <th>Preço Venda</th>
+                      <th>Lucro</th>
+                      <th>Margem %</th>
+                      <th>Estoque</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="productsTableBody">
+                    <!-- Produtos serão inseridos aqui via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Página de Vendas -->
+    <div class="page" id="sales-page">
+      <div class="container">
+        <div class="page-content">
+          <div class="page-header">
+            <h2>Registro de Vendas Diárias</h2>
+            <button class="btn btn-primary" id="addSaleBtn">
+              <i class="fas fa-plus"></i> Nova Venda
+            </button>
+          </div>
+          
+          <div class="content-wrapper">
+            <!-- Resumo de Vendas -->
+            <div class="sales-summary">
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Receita Total</h3>
+                  <div class="summary-value" id="salesTotalRevenue">R$ 0,00</div>
+                  <div class="summary-subtitle">Total de vendas</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Lucro Total</h3>
+                  <div class="summary-value" id="salesTotalProfit">R$ 0,00</div>
+                  <div class="summary-subtitle">Lucro das vendas</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-percentage"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Margem Média</h3>
+                  <div class="summary-value" id="salesAvgMargin">0%</div>
+                  <div class="summary-subtitle">Margem percentual</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-shopping-cart"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Total de Vendas</h3>
+                  <div class="summary-value" id="salesTotalOrders">0</div>
+                  <div class="summary-subtitle">Número de vendas</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Vendas do Dia</h3>
+              </div> <br>
+              <div class="table-wrap">
+                <table id="salesTable">
+                  <thead>
+                    <tr>
+                      <th>Data</th>
+                      <th>Produto</th>
+                      <th>Quantidade</th>
+                      <th>Preço Unit.</th>
+                      <th>Total</th>
+                      <th>Lucro</th>
+                      <th>Margem %</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody id="salesTableBody">
+                    <!-- Vendas serão inseridas aqui via JavaScript -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Página de Custos -->
+    <div class="page" id="costs-page">
+      <div class="container">
+        <div class="page-content">
+          <div class="page-header">
+            <h2>Gestão de Custos</h2>
+            <div class="header-actions">
+              <button class="btn btn-secondary" id="addCustomCostBtn">
+                <i class="fas fa-plus"></i> Custo Personalizado
+              </button>
+              <button class="btn btn-primary" id="addTaxBtn">
+                <i class="fas fa-receipt"></i> Adicionar Imposto
+              </button>
+            </div>
+          </div>
+          
+          <div class="content-wrapper">
+            <div class="costs-dashboard">
+              <!-- Resumo de Custos -->
+              <div class="costs-summary">
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-box"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Custos de Produtos</h3>
+                  <div class="summary-value" id="totalProductCosts">R$ 0,00</div>
+                  <div class="summary-subtitle">Custo total dos produtos</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-receipt"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Impostos</h3>
+                  <div class="summary-value" id="totalTaxes">R$ 0,00</div>
+                  <div class="summary-subtitle">Total de impostos</div>
+                </div>
+              </div>
+              
+              <div class="summary-card">
+                <div class="summary-icon">
+                  <i class="fas fa-tools"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Custos Operacionais</h3>
+                  <div class="summary-value" id="totalOperationalCosts">R$ 0,00</div>
+                  <div class="summary-subtitle">Custos personalizados</div>
+                </div>
+              </div>
+              
+              <div class="summary-card total">
+                <div class="summary-icon">
+                  <i class="fas fa-calculator"></i>
+                </div>
+                <div class="summary-content">
+                  <h3>Total de Custos</h3>
+                  <div class="summary-value" id="totalAllCosts">R$ 0,00</div>
+                  <div class="summary-subtitle">Todos os custos</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabs de Custos -->
+            <div class="costs-tabs">
+              <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="products">Custos de Produtos</button>
+                <button class="tab-btn" data-tab="taxes">Impostos</button>
+                <button class="tab-btn" data-tab="operational">Custos Operacionais</button>
+              </div>
+              
+              <!-- Tab: Custos de Produtos -->
+              <div class="tab-content active" id="products-tab">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>Custos dos Produtos</h3>
+                  </div>
+                  <div class="table-wrap">
+                    <table id="productCostsTable">
+                      <thead>
+                        <tr>
+                          <th>Produto</th>
+                          <th>Custo Unitário</th>
+                          <th>Estoque</th>
+                          <th>Custo Total</th>
+                          <th>Preço Venda</th>
+                          <th>Margem</th>
+                          <th>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="productCostsTableBody">
+                        <!-- Produtos serão inseridos aqui via JavaScript -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Tab: Impostos -->
+              <div class="tab-content" id="taxes-tab">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>Impostos</h3>
+                  </div>
+                  <div class="table-wrap">
+                    <table id="taxesTable">
+                      <thead>
+                        <tr>
+                          <th>Descrição</th>
+                          <th>Tipo</th>
+                          <th>Percentual</th>
+                          <th>Data</th>
+                          <th>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="taxesTableBody">
+                        <!-- Impostos serão inseridos aqui via JavaScript -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Tab: Custos Operacionais -->
+              <div class="tab-content" id="operational-tab">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>Custos Operacionais</h3>
+                  </div>
+                  <div class="table-wrap">
+                    <table id="operationalCostsTable">
+                      <thead>
+                        <tr>
+                          <th>Descrição</th>
+                          <th>Categoria</th>
+                          <th>Valor</th>
+                          <th>Data</th>
+                          <th>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody id="operationalCostsTableBody">
+                        <!-- Custos operacionais serão inseridos aqui via JavaScript -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Página Sobre -->
+    <div class="page" id="about-page">
+      <div class="container">
+        <div class="page-content">
+          <div class="about-main-section">
+            <!-- Card Principal do Projeto -->
+            <div class="project-info-card">
+              <div class="project-header">
+                <div class="project-title">
+                  <div class="project-badge">
+                    <i class="fas fa-graduation-cap"></i>
+                    <span>TCC - CEMEP</span>
+                  </div>
+                  <h1>GEX - Gestão Empresarial</h1>
+                  <p class="project-subtitle">Sistema Integrado de Controle Financeiro e Operacional</p>
+                </div>
+              </div>
+              
+              <div class="project-description">
+                <div class="description-header">
+                  <h3><i class="fas fa-info-circle"></i> Sobre o Projeto</h3>
+                </div>
+                <p>Este <strong>Trabalho de Conclusão de Curso (TCC)</strong> desenvolvido na <strong>Escola CEMEP</strong> apresenta uma solução completa de gestão empresarial, chamada GEX. O Dashboard de Gestão Empresarial GEX foi criado para auxiliar empresas no controle financeiro, gestão de produtos, vendas e custos. Com uma interface moderna e intuitiva, o sistema oferece visualizações em tempo real e relatórios detalhados para tomada de decisões estratégicas.</p>
+                
+                <div class="project-highlights">
+                  <div class="highlight-item institution-clickable" onclick="window.open('https://cemep.net.br', '_blank')" title="Visitar site da CEMEP">
+                    <i class="fas fa-school"></i>
+                    <div>
+                      <strong>Instituição:</strong> CEMEP - Centro de Ensino Profissionalizante Osmar Passarelli Silveira
+                    </div>
+                  </div>
+                  <div class="highlight-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div>
+                      <strong>Período:</strong> 2025 - 3º Ano do Ensino Técnico
+                    </div>
+                  </div>
+                  <div class="highlight-item">
+                    <i class="fas fa-users"></i>
+                    <div>
+                      <strong>Equipe:</strong> Lorenzo Maeno, Vitor Silva e Yudi Kishimoto
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="project-features">
+                <h3><i class="fas fa-star"></i> Principais Funcionalidades</h3>
+                <div class="features-grid">
+                  <div class="feature-card" data-feature="dashboard">
+                    <div class="feature-icon">
+                      <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h4>Dashboard Inteligente</h4>
+                    <p>KPIs em tempo real com visualizações interativas</p>
+                  </div>
+                  <div class="feature-card" data-feature="products">
+                    <div class="feature-icon">
+                      <i class="fas fa-boxes"></i>
+                    </div>
+                    <h4>Gestão de Produtos</h4>
+                    <p>Controle completo de estoque e catálogo</p>
+                  </div>
+                  <div class="feature-card" data-feature="sales">
+                    <div class="feature-icon">
+                      <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h4>Controle de Vendas</h4>
+                    <p>Faturamento e análise de performance</p>
+                  </div>
+                  <div class="feature-card" data-feature="costs">
+                    <div class="feature-icon">
+                      <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <h4>Gestão de Custos</h4>
+                    <p>Análise detalhada de despesas e lucros</p>
+                  </div>
+                  <div class="feature-card" data-feature="reports">
+                    <div class="feature-icon">
+                      <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h4>Relatórios Avançados</h4>
+                    <p>Gráficos e análises personalizáveis</p>
+                  </div>
+                  <div class="feature-card" data-feature="responsive">
+                    <div class="feature-icon">
+                      <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h4>Design Responsivo</h4>
+                    <p>Interface adaptável para todos os dispositivos</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="project-footer">
+                <div class="tech-preview">
+                  <span class="tech-preview-label">Tecnologias:</span>
+                  <div class="tech-tags">
+                    <span class="tech-tag">HTML5</span>
+                    <span class="tech-tag">CSS3</span>
+                    <span class="tech-tag">JavaScript</span>
+                    <span class="tech-tag">Node.js</span>
+                    <span class="tech-tag">SQLite</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Seção dos Desenvolvedores -->
+            <div class="developers-section">
+              <h3>Equipe de Desenvolvimento</h3>
+              <p>Desenvolvedores responsáveis por este projeto</p>
+              <div class="developers-grid">
+                <div class="developer-card">
+                  <div class="developer-photo">
+                    <img src="lorenzo.jpg" alt="Lorenzo" class="dev-img">
+                  </div>
+                  <div class="developer-info">
+                    <h4>Lorenzo Maeno</h4>
+                    <a href="https://www.linkedin.com/in/lorenzo-vitachi-maeno-099b41211/" class="linkedin-btn">
+                      <i class="fab fa-linkedin"></i>
+                      LinkedIn
+                    </a>
+                  </div>
+                </div>
+                <div class="developer-card">
+                  <div class="developer-photo">
+                    <img src="vitor.jpg" alt="Vitor" class="dev-img">
+                  </div>
+                  <div class="developer-info">
+                    <h4>Vitor Silva</h4>
+                    <a href="https://www.linkedin.com/in/vitor-lima-silva-204952224/" class="linkedin-btn">
+                      <i class="fab fa-linkedin"></i>
+                      LinkedIn
+                    </a>
+                  </div>
+                </div>
+                <div class="developer-card">
+                  <div class="developer-photo">
+                    <img src="yudi.jpg" alt="Yudi" class="dev-img">
+                  </div>
+                  <div class="developer-info">
+                    <h4>Yudi Kishimoto</h4>
+                    <a href="https://www.linkedin.com/in/thiago-yudi-kishimoto-b1a487352/" class="linkedin-btn">
+                      <i class="fab fa-linkedin"></i>
+                      LinkedIn
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Página de Conta do Usuário -->
+    <div class="page" id="account-page">
+      <div class="container">
+        <div class="page-content">
+          <!-- Layout Principal da Conta -->
+          <div class="account-main-layout">
+            <!-- Header da Conta -->
+            <div class="account-header">
+              <div class="account-header-content">
+                <div class="account-profile-section">
+                  <div class="account-profile-avatar" id="accountProfilePicture">
+                    <img id="accountProfileImage" src="" alt="Foto do usuário" class="account-profile-img">
+                    <div class="profile-photo-placeholder" id="accountProfilePlaceholder">
+                      <i class="fas fa-user"></i>
+                    </div>
+                    <div class="profile-edit-overlay">
+                      <button class="btn btn-sm btn-primary" id="accountUploadPhotoBtn">
+                        <i class="fas fa-camera"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="account-profile-info">
+                    <h1 id="accountProfileName">Usuário</h1>
+                    <p class="account-profile-email" id="accountProfileEmail">usuario@exemplo.com</p>
+                    <div class="account-status">
+                      <span class="status-badge active">Conta Ativa</span>
+                      <span class="member-since">Membro desde 2025</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="account-actions">
+                  <button class="btn btn-secondary" id="removePhotoBtn" style="display: none;">
+                    <i class="fas fa-trash"></i> Remover Foto
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Seções da Conta -->
+            <div class="account-sections">
+            <!-- Informações Pessoais -->
+            <div class="account-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fas fa-user-edit"></i>
+                </div>
+                <div class="section-title">
+                  <h3>Informações Pessoais</h3>
+                  <p>Gerencie suas informações básicas</p>
+                </div>
+              </div>
+              <div class="section-content">
+                <form class="modern-form" id="personalInfoForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="accountName">
+                        <i class="fas fa-user"></i>
+                        Nome Completo
+                      </label>
+                      <input type="text" id="accountName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="accountUsername">
+                        <i class="fas fa-at"></i>
+                        Nome de Usuário
+                      </label>
+                      <input type="text" id="accountUsername" name="username" required>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="accountEmail">
+                      <i class="fas fa-envelope"></i>
+                      E-mail
+                    </label>
+                    <input type="email" id="accountEmail" name="email" required>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fas fa-save"></i> Salvar Alterações
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Segurança -->
+            <div class="account-section">
+              <div class="section-header">
+                <div class="section-icon">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="section-title">
+                  <h3>Segurança</h3>
+                  <p>Proteja sua conta com uma senha forte</p>
+                </div>
+              </div>
+              <div class="section-content">
+                <form class="modern-form" id="changePasswordForm">
+                  <div class="form-row">
+                    <div class="form-group">
+                      <label for="newPassword">
+                        <i class="fas fa-lock"></i>
+                        Nova Senha
+                      </label>
+                      <input type="password" id="newPassword" name="newPassword" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="confirmNewPassword">
+                        <i class="fas fa-lock"></i>
+                        Confirmar Nova Senha
+                      </label>
+                      <input type="password" id="confirmNewPassword" name="confirmNewPassword" required>
+                    </div>
+                  </div>
+                  <div class="password-strength">
+                    <div class="strength-bar">
+                      <div class="strength-fill"></div>
+                    </div>
+                    <span class="strength-text">Digite uma senha forte</span>
+                  </div>
+                  <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fas fa-key"></i> Alterar Senha
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <!-- Botão de Excluir Conta -->
+            <div class="account-danger-zone">
+              <div class="danger-zone-header">
+                <div class="danger-icon">
+                  <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="danger-title">
+                  <h3>Zona de Perigo</h3>
+                  <p>Ações irreversíveis que afetam permanentemente sua conta</p>
+                </div>
+              </div>
+              <div class="danger-zone-content">
+                <div class="danger-action">
+                  <div class="danger-info">
+                    <h4>Excluir Conta</h4>
+                    <p>Esta ação não pode ser desfeita. Todos os seus dados serão permanentemente removidos.</p>
+                  </div>
+                  <button class="btn btn-danger" id="deleteAccountBtn">
+                    <i class="fas fa-trash-alt"></i> Excluir Conta
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+
+
+
+  </main>
+
+
+  <!-- Sistema de Notificações -->
+  <div class="notification-container" id="notificationContainer">
+    <!-- As notificações serão inseridas aqui dinamicamente -->
+  </div>
+
+  <!-- Input oculto para upload de foto -->
+  <input type="file" id="photoInput" accept="image/*" style="display: none;">
+
+  <!-- Modal de Login -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Login / Cadastro</h3>
+        <button class="modal-close" id="closeLoginModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      
+      <div class="form-switch">
+        <button type="button" class="switch-btn active" id="loginSwitch">Login</button>
+        <button type="button" class="switch-btn" id="registerSwitch">Cadastro</button>
+      </div>
+      
+      <!-- Formulário de Login -->
+      <form class="modal-form auth-form active" id="loginForm">
+        <div class="form-group">
+          <label for="modalUsername">Usuário:</label>
+          <input type="text" id="modalUsername" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="modalPassword">Senha:</label>
+          <input type="password" id="modalPassword" name="password" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelLogin">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-sign-in-alt"></i> Entrar
+          </button>
+        </div>
+      </form>
+      
+      <!-- Formulário de Cadastro -->
+      <form class="modal-form auth-form" id="registerForm">
+        <div class="form-group">
+          <label for="modalRegName">Nome:</label>
+          <input type="text" id="modalRegName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="modalRegEmail">Email:</label>
+          <input type="email" id="modalRegEmail" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="modalRegUsername">Usuário:</label>
+          <input type="text" id="modalRegUsername" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="modalRegPassword">Senha:</label>
+          <input type="password" id="modalRegPassword" name="password" required>
+        </div>
+        <div class="form-group">
+          <label for="modalConfirmPassword">Confirmar Senha:</label>
+          <input type="password" id="modalConfirmPassword" name="confirmPassword" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelRegister">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> Cadastrar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Novo Produto -->
+  <div class="modal" id="productModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Novo Produto</h3>
+        <button class="modal-close" id="closeProductModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form class="modal-form" id="productForm">
+        <div class="form-group">
+          <label for="productName">Nome do Produto:</label>
+          <input type="text" id="productName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="productCost">Custo (R$):</label>
+          <input type="number" id="productCost" name="cost" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="productPrice">Preço de Venda (R$):</label>
+          <input type="number" id="productPrice" name="price" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="productStock">Quantidade em Estoque:</label>
+          <input type="number" id="productStock" name="stock" min="0" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelProduct">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Adicionar Produto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Editar Produto -->
+  <div class="modal" id="editProductModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Editar Produto</h3>
+        <button class="modal-close" id="closeEditProductModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form class="modal-form" id="editProductForm">
+        <div class="form-group">
+          <label for="editProductName">Nome do Produto:</label>
+          <input type="text" id="editProductName" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductCost">Custo (R$):</label>
+          <input type="number" id="editProductCost" name="cost" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductPrice">Preço de Venda (R$):</label>
+          <input type="number" id="editProductPrice" name="price" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductStock">Quantidade em Estoque:</label>
+          <input type="number" id="editProductStock" name="stock" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="editProductCategory">Categoria:</label>
+          <select id="editProductCategory" name="category">
+            <option value="eletronicos">Eletrônicos</option>
+            <option value="roupas">Roupas</option>
+            <option value="casa">Casa e Decoração</option>
+            <option value="livros">Livros</option>
+            <option value="esportes">Esportes</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="editProductDescription">Descrição:</label>
+          <textarea id="editProductDescription" name="description" rows="3"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelEditProduct">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Atualizar Produto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Custo -->
+  <div class="modal" id="costModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Adicionar Gasto</h3>
+        <button class="modal-close" id="closeCostModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form class="modal-form" id="costForm">
+        <div class="form-group">
+          <label for="costDescription">Descrição:</label>
+          <input type="text" id="costDescription" name="description" required>
+        </div>
+        <div class="form-group">
+          <label for="costCategory">Categoria:</label>
+          <select id="costCategory" name="category" required>
+            <option value="">Selecione uma categoria</option>
+            <option value="operacional">Operacional</option>
+            <option value="marketing">Marketing</option>
+            <option value="administrativo">Administrativo</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="costValue">Valor:</label>
+          <input type="number" id="costValue" name="value" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="costDate">Data:</label>
+          <input type="date" id="costDate" name="date" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelCost">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Adicionar Gasto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal de Imposto -->
+  <div class="modal" id="taxModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Adicionar Imposto</h3>
+        <button class="modal-close" id="closeTaxModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form class="modal-form" id="taxForm">
+        <div class="form-group">
+          <label for="taxDescription">Descrição:</label>
+          <input type="text" id="taxDescription" name="description" required>
+        </div>
+        <div class="form-group">
+          <label for="taxType">Tipo de Imposto:</label>
+          <select id="taxType" name="type" required>
+            <option value="">Selecione o tipo</option>
+            <option value="icms">ICMS</option>
+            <option value="pis">PIS</option>
+            <option value="cofins">COFINS</option>
+            <option value="iss">ISS</option>
+            <option value="ipi">IPI</option>
+            <option value="irpj">IRPJ</option>
+            <option value="csll">CSLL</option>
+            <option value="simples">Simples Nacional</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="taxValue">Percentual (%):</label>
+          <input type="number" id="taxValue" name="value" step="0.01" min="0" max="100" required>
+        </div>
+        <div class="form-group">
+          <label for="taxDate">Data:</label>
+          <input type="date" id="taxDate" name="date" required>
+        </div>
+        <div class="form-group">
+          <label for="taxNotes">Observações (opcional):</label>
+          <textarea id="taxNotes" name="notes" rows="3" placeholder="Adicione observações sobre este imposto..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelTax">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-receipt"></i> Adicionar Imposto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Custo Personalizado -->
+  <div class="modal" id="customCostModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Novo Custo Personalizado</h3>
+        <button class="modal-close" id="closeCustomCostModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form class="modal-form" id="customCostForm">
+        <div class="form-group">
+          <label for="customCostDescription">Descrição:</label>
+          <input type="text" id="customCostDescription" name="description" required>
+        </div>
+        <div class="form-group">
+          <label for="customCostCategory">Categoria:</label>
+          <select id="customCostCategory" name="category" required>
+            <option value="">Selecione uma categoria</option>
+            <option value="operacional">Operacional</option>
+            <option value="marketing">Marketing</option>
+            <option value="administrativo">Administrativo</option>
+            <option value="manutencao">Manutenção</option>
+            <option value="aluguel">Aluguel</option>
+            <option value="energia">Energia</option>
+            <option value="agua">Água</option>
+            <option value="telefone">Telefone/Internet</option>
+            <option value="combustivel">Combustível</option>
+            <option value="outros">Outros</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="customCostValue">Valor:</label>
+          <input type="number" id="customCostValue" name="value" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="customCostDate">Data:</label>
+          <input type="date" id="customCostDate" name="date" required>
+        </div>
+        <div class="form-group">
+          <label for="customCostNotes">Observações (opcional):</label>
+          <textarea id="customCostNotes" name="notes" rows="3" placeholder="Adicione observações sobre este custo..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelCustomCost">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Adicionar Custo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Nova Venda -->
+  <div class="modal" id="saleModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Nova Venda</h3>
+        <button class="modal-close" id="closeSaleModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <form class="modal-form" id="saleForm">
+        <div class="sale-products-container">
+          <h4>Produtos da Venda</h4>
+          <div class="products-list" id="productsList">
+            <!-- Produtos serão adicionados dinamicamente aqui -->
+          </div>
+          <button type="button" class="btn btn-secondary" id="addSaleProductBtn">
+            <i class="fas fa-plus"></i> Adicionar mais um produto
+          </button>
+        </div>
+        
+        <div class="form-group">
+          <label for="saleDate">Data da Venda:</label>
+          <input type="date" id="saleDate" name="date" required>
+        </div>
+        <div class="form-group">
+          <label for="saleTime">Horário da Venda:</label>
+          <input type="time" id="saleTime" name="time" required>
+        </div>
+        
+        <div class="sale-info">
+          <div class="info-item">
+            <span class="info-label">Total de Produtos:</span>
+            <span class="info-value" id="totalProducts">0</span>
+          </div>
+          <div class="info-item total">
+            <span class="info-label">Valor Total:</span>
+            <span class="info-value" id="saleTotal">R$ 0,00</span>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelSale">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-shopping-cart"></i> Registrar Venda
+          </button>
+        </div>
+      </form>
+    </div>
+    </div>
+
+  <!-- Modal de Exclusão de Produto -->
+  <div class="modal" id="deleteProductModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Excluir Produto</h3>
+        <button class="modal-close" id="closeDeleteProductModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="delete-warning">
+          <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h4>Tem certeza que deseja excluir este produto?</h4>
+          <p>Esta ação não pode ser desfeita e irá remover permanentemente:</p>
+          <div class="delete-info">
+            <div class="info-item">
+              <span class="info-label">Nome:</span>
+              <span class="info-value" id="deleteProductName">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Preço:</span>
+              <span class="info-value" id="deleteProductPrice">-</span>
+            </div>
+          </div>
+          <div class="info-item" id="deleteProductSalesInfo" style="display: none;">
+            <span class="info-label">Vendas associadas:</span>
+            <span class="info-value" id="deleteProductSalesCount">-</span>
+          </div>
+          <div class="warning-text">
+            <strong>Atenção:</strong> Esta ação também irá remover todas as vendas relacionadas a este produto.
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDeleteProduct">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteProduct">
+          <i class="fas fa-trash"></i> Excluir Produto
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Exclusão de Venda -->
+  <div class="modal" id="deleteSaleModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Excluir Venda</h3>
+        <button class="modal-close" id="closeDeleteSaleModal">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="delete-warning">
+          <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <h4>Tem certeza que deseja excluir esta venda?</h4>
+          <p>Esta ação não pode ser desfeita e irá remover permanentemente:</p>
+          <div class="delete-info">
+            <div class="info-item">
+              <span class="info-label">Produto:</span>
+              <span class="info-value" id="deleteSaleProduct">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Quantidade:</span>
+              <span class="info-value" id="deleteSaleQuantity">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Valor:</span>
+              <span class="info-value" id="deleteSaleAmount">-</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Data:</span>
+              <span class="info-value" id="deleteSaleDate">-</span>
+            </div>
+          </div>
+          <div class="warning-text">
+            <strong>Atenção:</strong> Esta ação irá restaurar o estoque do produto vendido.
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="cancelDeleteSale">
+          <i class="fas fa-times"></i> Cancelar
+        </button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteSale">
+          <i class="fas fa-trash"></i> Excluir Venda
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="database.js"></script>
+  <script src="app.js"></script>
+  
+  <!-- Script para inicializar gráficos da demo -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar gráfico de vendas da demo (igual ao dashboard real)
+      const salesCtx = document.getElementById('demoSalesChart');
+      if (salesCtx) {
+        new Chart(salesCtx, {
+          type: 'line',
+          data: {
+            labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+            datasets: [{
+              label: 'Vendas',
+              data: [1200, 1900, 3000, 2500, 2200, 1800],
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              tension: 0.4,
+              fill: true
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.1)'
+                },
+                ticks: {
+                  color: '#666',
+                  callback: function(value) {
+                    return 'R$ ' + (value / 1000) + 'k';
+                  }
+                }
+              },
+              x: {
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.1)'
+                },
+                ticks: {
+                  color: '#666'
+                }
+              }
+            }
+          }
+        });
+      }
+
+      // Inicializar gráfico de top produtos da demo (formato de lista)
+      const productsCtx = document.getElementById('demoTopProductsChart');
+      if (productsCtx) {
+        new Chart(productsCtx, {
+          type: 'bar',
+          data: {
+            labels: ['iPhone 15 Pro', 'MacBook Pro', 'Galaxy S24', 'PlayStation 5', 'AirPods Pro'],
+            datasets: [{
+              label: 'Receita (R$ mil)',
+              data: [72, 95, 48, 18, 24],
+              backgroundColor: [
+                '#3b82f6',
+                '#10b981',
+                '#f59e0b',
+                '#ef4444',
+                '#8b5cf6'
+              ],
+              borderWidth: 0,
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+              legend: {
+                display: false
+              }
+            },
+            scales: {
+              x: {
+                beginAtZero: true,
+                grid: {
+                  color: 'rgba(0, 0, 0, 0.1)'
+                },
+                ticks: {
+                  color: '#666',
+                  callback: function(value) {
+                    return 'R$ ' + value + 'k';
+                  }
+                }
+              },
+              y: {
+                grid: {
+                  display: false
+                },
+                ticks: {
+                  color: '#666'
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+  </script>
+  </body>
+  </html>
+
+
